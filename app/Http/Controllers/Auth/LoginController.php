@@ -36,4 +36,16 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+    /**
+     * @{inheritDoc}
+     *
+     * @param   \Illuminate\Http\Request  $request
+     * @param   \App\User  $user
+     * @return  \Illuminate\Http\JsonResponse
+     */
+    public function authenticated($request, $user)
+    {
+        return response()->json(['name' => $user->name]);
+    }
 }
