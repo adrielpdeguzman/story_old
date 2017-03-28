@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Hash;
 use App\User;
+use App\GenericFilters;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -12,11 +13,20 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\GenericFilters  $filters
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(GenericFilters $filters)
     {
-        return response()->json(User::get());
+        $users = User::filter($filters);
+
+        if (request('page')) {
+            $users = $users->paginate(request('per_page'));
+        } else {
+            $users = $users->get();
+        }
+
+        return response()->json($users);
     }
 
     /**
