@@ -44,11 +44,10 @@ class UserController extends Controller
         ]);
 
         $user = new User;
-        $user->fill([
-            'name' => request('name'),
-            'email' => request('email'),
-            'password' => Hash::make(request('password')),
-        ]);
+        $user->fill($request->only([
+            'email', 'name'
+        ]));
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return response()->json($user, 201)
@@ -81,11 +80,13 @@ class UserController extends Controller
             'name' => 'sometimes|required',
         ]);
 
-        $user->fill([
-            'name' => request('name'),
-            'email' => request('email'),
-            'password' => Hash::make(request('password')),
-        ]);
+        $user->fill($request->intersect([
+            'email', 'name'
+        ]));
+
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
         $user->save();
 
         return response()->json($user);
