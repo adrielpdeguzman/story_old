@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Hash;
 use App\User;
-use App\GenericFilters;
+use App\UserFilters;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -13,10 +13,10 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\GenericFilters  $filters
+     * @param  \App\UserFilters  $filters
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(GenericFilters $filters)
+    public function index(UserFilters $filters)
     {
         $users = User::filter($filters);
 
@@ -101,5 +101,46 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         return response()->json($user->delete(), 204);
+    }
+
+    /**
+     * Display the partner of the user.
+     *
+     * @param   \App\User  $user
+     * @return  \Illuminate\Http\JsonResponse
+     */
+    public function showPartner(User $user)
+    {
+        return response()->json($user->partner);
+    }
+
+    /**
+     * Update the associated partner of the resource, and dissociate the old.
+     *
+     * @param   \Illuminate\Http\Request  $request
+     * @param   \App\User  $user
+     * @return  \Illuminate\Http\JsonResponse
+     */
+    public function updatePartner(Request $request, User $user)
+    {
+        $this->validate($request, [
+            'partner_id' => 'required|exists:users,id|unique:users,partner_id,'.$user->id.'|not_in:'.$user->id,
+        ]);
+
+        if ($user->partner()->exists()) {
+            $oldPartner = $user->partner;
+            $user->partner()->dissociate();
+            $oldPartner->partner_id = null;
+            $oldPartner->save();
+            unset($oldPartner);
+        }
+
+        $newPartner = User::find($request->partner_id);
+        $newPartner->partner_id = $user->id;
+        $newPartner->save();
+        $user->partner()->associate($newPartner);
+        $user->save();
+
+        return response()->json($user);
     }
 }

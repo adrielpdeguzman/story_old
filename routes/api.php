@@ -18,6 +18,13 @@ Route::group(['middleware' => 'auth:api'], function () {
         return response()->json(['name' => $request->user()->name]);
     })->name('user');
 
+    Route::group(['prefix' => '/users', 'as' => 'users.'], function () {
+        Route::get('{user}/partner', 'UserController@showPartner')
+            ->name('partner.show');
+        Route::put('{user}/partner', 'UserController@updatePartner')
+            ->name('partner.update');
+    });
+
     Route::resource('/users', 'UserController', ['except' => [
         'create', 'edit'
     ]]);

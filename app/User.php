@@ -36,4 +36,14 @@ class User extends Authenticatable
     public $searchable = [
         'name', 'email',
     ];
+
+    /**
+     * Get the partner of the user.
+     *
+     * @return  \Illuminate\Database\Eloquent\Concerns\belongsTo
+     */
+    public function partner()
+    {
+        return $this->belongsTo($this, 'partner_id');
+    }
 }
