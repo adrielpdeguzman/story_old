@@ -125,20 +125,24 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'partner_id' => 'required|exists:users,id|unique:users,partner_id,'.$user->id.'|not_in:'.$user->id,
+            'anniversary_date' => 'required|date_format:Y-m-d',
         ]);
 
         if ($user->partner()->exists()) {
             $oldPartner = $user->partner;
             $user->partner()->dissociate();
             $oldPartner->partner_id = null;
+            $oldPartner->anniversary_date = null;
             $oldPartner->save();
             unset($oldPartner);
         }
 
         $newPartner = User::find($request->partner_id);
         $newPartner->partner_id = $user->id;
+        $newPartner->anniversary_date = $request->anniversary_date;
         $newPartner->save();
         $user->partner()->associate($newPartner);
+        $user->anniversary_date = $request->anniversary_date;
         $user->save();
 
         return response()->json($user);
