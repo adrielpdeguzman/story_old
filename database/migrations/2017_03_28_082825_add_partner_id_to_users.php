@@ -16,6 +16,7 @@ class AddPartnerIdToUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('partner_id')->after('id')
                 ->unsigned()->unique()->nullable();
+            $table->date('anniversary_date')->after('partner_id')->nullable();
         });
     }
 
@@ -28,6 +29,7 @@ class AddPartnerIdToUsers extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('partner_id');
+            $table->dropColumn('anniversary_date');
         });
     }
 }
