@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             ->name('partner.update');
     });
 
-    Route::resource('/users', 'UserController', ['except' => [
+    Route::resource('users', 'UserController', ['except' => [
         'create', 'edit'
     ]]);
 });
