@@ -46,4 +46,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo($this, 'partner_id');
     }
+
+    /**
+     * Get the stories owned by the user.
+     *
+     * @return  \Illuminate\Database\Eloquent\Concerns\hasMany
+     */
+    public function stories()
+    {
+        return $this->hasMany('App\Story');
+    }
 }
