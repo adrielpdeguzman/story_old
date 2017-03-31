@@ -4,7 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class UserFilters extends GenericFilters {
+class UserFilters extends GenericFilters
+{
     /**
      * Filter by single users.
      *
