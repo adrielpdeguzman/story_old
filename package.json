@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "cross-env": "^3.2.3",
-    "laravel-mix": "0.*",
+    "laravel-mix": "0.*"
   },
   "dependencies": {
     "axios": "^0.15.3",
