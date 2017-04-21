@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropType from 'prop-types';
 import Text from './Text';
+import Password from './Password';
+import Checkbox from './Checkbox';
+
+const components = {
+  Text, Password, Checkbox,
+};
 
 const propTypes = {
   /**
@@ -8,9 +14,7 @@ const propTypes = {
    */
   fields: PropType.arrayOf(PropType.shape({
     name: PropType.string,
-    type: PropType.oneOf([
-      'Text', 'Password',
-    ]),
+    type: PropType.oneOf(Object.keys(components)),
     label: PropType.string,
     required: PropType.bool,
   })).isRequired,
@@ -43,9 +47,29 @@ class Form extends Component {
     this.setState({ fields });
   }
 
-  render() {
+  /**
+   * Render the field component based on field props.
+   * @param object fieldProps
+   */
+  renderField(fieldProps) {
+    const { type, ...props } = fieldProps;
+    const FieldComponent = components[type];
     return (
-      <form />
+      <FieldComponent
+        key={fieldProps.name}
+        onChange={this.handleInputChange}
+        {...props}
+      />
+    );
+  }
+
+  render() {
+    const formFields = this.props.fields.map(field => this.renderField(field));
+
+    return (
+      <form>
+        {formFields}
+      </form>
     );
   }
 }

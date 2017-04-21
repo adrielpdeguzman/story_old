@@ -21,6 +21,8 @@ const Password = ({ name, label, placeholder, required, onChange }) => (
       <input
         type="password"
         className="input"
+        id={name}
+        name={name}
         required={required}
         placeholder={placeholder}
         onChange={onChange}
