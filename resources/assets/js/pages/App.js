@@ -1,7 +1,19 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+} from 'react-router-dom';
+import Login from './Login';
 
-function App() {
-  return <h1>Story</h1>;
-}
+const App = () => (
+  <Router>
+    <div>
+      <Link to="/login">Login</Link>
+
+      <Route exact path="/login" component={Login} />
+    </div>
+  </Router>
+);
 
 export default App;
