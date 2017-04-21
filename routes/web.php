@@ -13,6 +13,6 @@
 
 Route::post('/login', 'Auth\LoginController@login');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/{path?}', function () {
+    return view('app');
+})->where('path', '.*');
