@@ -15,7 +15,7 @@ const defaultProps = {
 };
 
 const Email = ({ name, label, placeholder, required, onChange }) => (
-  <div className="field">
+  <div>
     <label htmlFor={name} className="label">{label}</label>
     <p className="control">
       <input

@@ -13,20 +13,18 @@ const defaultProps = {
 };
 
 const Checkbox = ({ name, label, checked, onChange }) => (
-  <div className="field">
-    <p className="control">
-      <label htmlFor={name} className="checkbox">
-        <input
-          type="checkbox"
-          id={name}
-          name={name}
-          onChange={onChange}
-          defaultChecked={checked}
-        />
-        {label}
-      </label>
-    </p>
-  </div>
+  <p className="control">
+    <label htmlFor={name} className="checkbox">
+      <input
+        type="checkbox"
+        id={name}
+        name={name}
+        onChange={onChange}
+        defaultChecked={checked}
+      />
+      {label}
+    </label>
+  </p>
 );
 
 Checkbox.propTypes = propTypes;

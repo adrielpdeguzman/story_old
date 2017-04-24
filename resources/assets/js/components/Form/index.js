@@ -86,22 +86,32 @@ class Form extends Component {
     const { fields } = this.state;
     e.preventDefault();
     axios[method](uri, fields)
-      .then(() => onSubmitSuccess());
+      .then(() => {
+        this.setState({ errors: {} });
+        onSubmitSuccess();
+      })
+      .catch(({ response }) => {
+        this.setState({ errors: response.data });
+      });
   }
 
   /**
    * Render the field component based on field props.
-   * @param object fieldProps
    */
   renderField(fieldProps) {
     const { type, ...props } = fieldProps;
     const FieldComponent = components[type];
+
     return (
-      <FieldComponent
+      <div
+        className="field"
         key={fieldProps.name}
-        onChange={this.handleInputChange}
-        {...props}
-      />
+      >
+        <FieldComponent
+          onChange={this.handleInputChange}
+          {...props}
+        />
+      </div>
     );
   }
 

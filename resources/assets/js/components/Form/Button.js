@@ -12,18 +12,16 @@ const defaultProps = {
 };
 
 const Button = ({ name, label, isSubmit }) => (
-  <div className="field">
-    <p className="control">
-      <button
-        type={isSubmit ? 'submit' : false}
-        id={name}
-        name={name}
-        className={`button ${isSubmit ? 'is-primary' : ''}`}
-      >
-        {label}
-      </button>
-    </p>
-  </div>
+  <p className="control">
+    <button
+      type={isSubmit ? 'submit' : false}
+      id={name}
+      name={name}
+      className={`button ${isSubmit ? 'is-primary' : ''}`}
+    >
+      {label}
+    </button>
+  </p>
 );
 
 Button.propTypes = propTypes;
