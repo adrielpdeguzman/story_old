@@ -87,16 +87,16 @@ class Form extends Component {
     e.preventDefault();
     this.setState({ isLoading: true });
     axios[method](uri, fields)
-      .then(() => {
+      .then(({ data }) => {
         this.setState({
           errors: {},
           isLoading: false,
         });
-        onSubmitSuccess();
+        onSubmitSuccess(data);
       })
-      .catch(({ response }) => {
+      .catch((error) => {
         this.setState({
-          errors: response.data,
+          errors: error.response.data,
           isLoading: false,
         });
       });
