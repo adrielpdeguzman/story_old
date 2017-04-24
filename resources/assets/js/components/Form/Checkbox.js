@@ -6,15 +6,17 @@ const propTypes = {
   label: PropType.string.isRequired,
   onChange: PropType.func.isRequired,
   checked: PropType.bool,
+  hasError: PropType.bool,
 };
 
 const defaultProps = {
   checked: false,
+  hasError: false,
 };
 
-const Checkbox = ({ name, label, checked, onChange }) => (
+const Checkbox = ({ name, label, checked, onChange, hasError }) => (
   <p className="control">
-    <label htmlFor={name} className="checkbox">
+    <label htmlFor={name} className={`checkbox ${hasError ? 'is-danger' : ''}`}>
       <input
         type="checkbox"
         id={name}

@@ -85,13 +85,20 @@ class Form extends Component {
     const { uri, method, onSubmitSuccess } = this.props;
     const { fields } = this.state;
     e.preventDefault();
+    this.setState({ isLoading: true });
     axios[method](uri, fields)
       .then(() => {
-        this.setState({ errors: {} });
+        this.setState({
+          errors: {},
+          isLoading: false,
+        });
         onSubmitSuccess();
       })
       .catch(({ response }) => {
-        this.setState({ errors: response.data });
+        this.setState({
+          errors: response.data,
+          isLoading: false,
+        });
       });
   }
 
@@ -100,7 +107,9 @@ class Form extends Component {
    */
   renderField(fieldProps) {
     const { type, ...props } = fieldProps;
+    const { errors } = this.state;
     const FieldComponent = components[type];
+    const hasError = Object.prototype.hasOwnProperty.call(errors, fieldProps.name);
 
     return (
       <div
@@ -109,8 +118,12 @@ class Form extends Component {
       >
         <FieldComponent
           onChange={this.handleInputChange}
+          hasError={hasError}
           {...props}
         />
+        {hasError ?
+          (<p className="help is-danger">{errors[fieldProps.name]}</p>) : ''
+        }
       </div>
     );
   }
