@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
 import PropType from 'prop-types';
+import axios from 'axios';
 import Text from './Text';
 import Password from './Password';
 import Checkbox from './Checkbox';
+import Button from './Button';
+import Email from './Email';
 
 const components = {
-  Text, Password, Checkbox,
+  Text, Password, Checkbox, Button, Email,
 };
 
 const propTypes = {
+  /**
+   * The URI endpoint to send the request to.
+   */
+  uri: PropType.string.isRequired,
+  /**
+   * The type of request to be sent on form submit.
+   */
+  method: PropType.oneOf(['post', 'put', 'patch']),
   /**
    * The fields to be rendered by the form.
    */
@@ -17,15 +28,34 @@ const propTypes = {
     type: PropType.oneOf(Object.keys(components)),
     label: PropType.string,
     required: PropType.bool,
+    isSubmit: PropType.bool,
   })).isRequired,
+  /**
+   * The callback function to be called when submit request is successful.
+   */
+  onSubmitSuccess: PropType.func.isRequired,
+};
+
+const defaultProps = {
+  method: 'post',
 };
 
 class Form extends Component {
   constructor(props) {
     super(props);
+
+    /**
+     * Initialize fields state to make controlled inputs.
+     */
     const fields = {};
-    props.fields.forEach((field) => {
-      fields[field.name] = field.type === 'checkbox' ? field.checked : '';
+    const inputFields = props.fields.filter(field => field.type !== 'Button');
+    inputFields.forEach((field) => {
+      if (field.type === 'Checkbox') {
+        const isChecked = !!field.checked;
+        fields[field.name] = isChecked;
+      } else {
+        fields[field.name] = '';
+      }
     });
 
     this.state = {
@@ -35,6 +65,7 @@ class Form extends Component {
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   /**
@@ -45,6 +76,17 @@ class Form extends Component {
       [target.id]: target.type === 'checkbox' ? target.checked : target.value,
     });
     this.setState({ fields });
+  }
+
+  /**
+   * Handle the form submission.
+   */
+  handleFormSubmit(e) {
+    const { uri, method, onSubmitSuccess } = this.props;
+    const { fields } = this.state;
+    e.preventDefault();
+    axios[method](uri, fields)
+      .then(() => onSubmitSuccess());
   }
 
   /**
@@ -64,10 +106,11 @@ class Form extends Component {
   }
 
   render() {
-    const formFields = this.props.fields.map(field => this.renderField(field));
+    const { fields } = this.props;
+    const formFields = fields.map(field => this.renderField(field));
 
     return (
-      <form>
+      <form onSubmit={this.handleFormSubmit}>
         {formFields}
       </form>
     );
@@ -75,5 +118,6 @@ class Form extends Component {
 }
 
 Form.propTypes = propTypes;
+Form.defaultProps = defaultProps;
 
 export default Form;
