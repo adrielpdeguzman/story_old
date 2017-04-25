@@ -19,6 +19,6 @@ if (mix.config.inProduction) {
 } else {
   mix.browserSync({
     open: false,
-    proxy: 'https://story.dev',
+    proxy: 'http://story.dev',
   });
 }

@@ -1,74 +1,51 @@
 import React, { Component } from 'react';
+import Form from '../components/Form';
+import auth from '../auth';
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loginForm: {
-        username: '',
-        password: '',
-        remember: false,
-      },
-    };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
   }
 
-  /**
-   * Handle input change on login form.
-   * @param Event e
-   */
-  handleInputChange({ target }) {
-    const loginForm = Object.assign({}, this.state.loginForm, {
-      [target.id]: target.type === 'checkbox' ? target.checked : target.value,
-    });
-    this.setState({ loginForm });
+  handleSubmitSuccess(user) {
+    auth.authenticate(user);
+    /* eslint-disable react/prop-types */
+    this.props.history.push('/');
   }
 
   render() {
-    const { username, password, remember } = this.state.loginForm;
     return (
       <div className="Login">
-        <form>
-          <div className="field">
-            <label htmlFor="username" className="label">Username</label>
-            <p className="control">
-              <input
-                className="input"
-                id="username"
-                placeholder="Username"
-                type="text"
-                value={username}
-                onChange={this.handleInputChange}
-              />
-            </p>
-          </div>
-          <div className="field">
-            <label htmlFor="password" className="label">Password</label>
-            <p className="control">
-              <input
-                className="input"
-                id="password"
-                placeholder="Password"
-                type="password"
-                value={password}
-                onChange={this.handleInputChange}
-              />
-            </p>
-          </div>
-          <div className="field">
-            <label htmlFor="remember" className="checkbox">
-              <p className="control">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  checked={remember}
-                  onChange={this.handleInputChange}
-                /> Remember Me
-              </p>
-            </label>
-          </div>
-        </form>
+        <Form
+          uri="http://story.dev/login"
+          onSubmitSuccess={this.handleSubmitSuccess}
+          fields={[
+            {
+              name: 'email',
+              type: 'Email',
+              label: 'E-mail Address',
+              required: true,
+            },
+            {
+              name: 'password',
+              type: 'Password',
+              label: 'Password',
+              required: true,
+            },
+            {
+              name: 'remember',
+              type: 'Checkbox',
+              label: 'Remember Me',
+            },
+            {
+              name: 'submit',
+              type: 'Button',
+              label: 'Login',
+              isSubmit: true,
+            },
+          ]}
+        />
       </div>
     );
   }
